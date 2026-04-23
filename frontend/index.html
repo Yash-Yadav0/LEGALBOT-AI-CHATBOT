@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ================================================
+       LegalBot India — AI Legal Chatbot
+       Domain  : Indian Laws & Women Safety
+       Author  : College Project
+       ================================================ -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="LegalBot India - AI-powered chatbot for Indian Laws and Women Safety Laws in simple Hinglish." />
+  <meta name="keywords" content="Indian law chatbot, women safety laws, IPC, legal awareness, Hinglish" />
+  <title>LegalBot India 🇮🇳 — AI Legal Assistant</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- ======== BACKGROUND PARTICLES ======== -->
+  <div class="bg-particles" aria-hidden="true">
+    <span></span><span></span><span></span>
+    <span></span><span></span><span></span>
+  </div>
+
+  <!-- ======== MAIN APP WRAPPER ======== -->
+  <div class="app-wrapper">
+
+    <!-- ======== SIDEBAR ======== -->
+    <aside class="sidebar" id="sidebar">
+
+      <!-- Logo -->
+      <div class="sidebar-logo">
+        <div class="logo-icon">⚖️</div>
+        <div class="logo-text">
+          <h1>LegalBot</h1>
+          <span>India 🇮🇳</span>
+        </div>
+      </div>
+
+      <!-- Tagline -->
+      <p class="sidebar-tagline">Your AI Legal Friend — Understanding Laws in Simple English</p>
+
+      <!-- Quick Category Buttons -->
+      <div class="category-section">
+        <h3 class="category-title">📂 Quick Topics</h3>
+
+        <button class="category-btn" id="btn-women" onclick="sendQuickQuery('women')">
+          <span class="cat-icon">👩</span>
+          <span>Women Safety Laws</span>
+        </button>
+
+        <button class="category-btn" id="btn-domestic" onclick="sendQuickQuery('domestic')">
+          <span class="cat-icon">🏠</span>
+          <span>Domestic Violence</span>
+        </button>
+
+        <button class="category-btn" id="btn-dowry" onclick="sendQuickQuery('dowry')">
+          <span class="cat-icon">💍</span>
+          <span>Dowry Laws</span>
+        </button>
+
+        <button class="category-btn" id="btn-sexual" onclick="sendQuickQuery('sexual')">
+          <span class="cat-icon">🛡️</span>
+          <span>Sexual Harassment</span>
+        </button>
+
+        <button class="category-btn" id="btn-criminal" onclick="sendQuickQuery('criminal')">
+          <span class="cat-icon">⚖️</span>
+          <span>Criminal Law (IPC)</span>
+        </button>
+
+        <button class="category-btn" id="btn-divorce" onclick="sendQuickQuery('divorce')">
+          <span class="cat-icon">📜</span>
+          <span>Divorce Laws</span>
+        </button>
+
+        <button class="category-btn" id="btn-traffic" onclick="sendQuickQuery('traffic')">
+          <span class="cat-icon">🚦</span>
+          <span>Traffic Rules</span>
+        </button>
+
+        <button class="category-btn" id="btn-rti" onclick="sendQuickQuery('rti')">
+          <span class="cat-icon">📋</span>
+          <span>RTI Act</span>
+        </button>
+      </div>
+
+      <!-- Emergency Numbers -->
+      <div class="emergency-box">
+        <h3>🚨 Emergency Numbers</h3>
+        <div class="emergency-grid">
+          <div class="emer-item"><span>👮 Police</span><strong>100</strong></div>
+          <div class="emer-item"><span>👩 Women</span><strong>1091</strong></div>
+          <div class="emer-item"><span>🏠 DV Help</span><strong>181</strong></div>
+          <div class="emer-item"><span>👶 Child</span><strong>1098</strong></div>
+          <div class="emer-item"><span>⚖️ Legal Aid</span><strong>15100</strong></div>
+          <div class="emer-item"><span>🚑 Ambulance</span><strong>108</strong></div>
+          <div class="emer-item"><span>🏥 Health</span><strong>104</strong></div>
+        </div>
+      </div>
+
+      <!-- Clear Chat Button -->
+      <button class="clear-btn" id="clearBtn" onclick="clearChat()">
+        🗑️ Clear Chat
+      </button>
+
+    </aside>
+
+    <!-- ======== MAIN CHAT AREA ======== -->
+    <main class="chat-container">
+
+      <!-- ---- Top Header Bar ---- -->
+      <header class="chat-header">
+        <!-- Mobile menu toggle -->
+        <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()" aria-label="Toggle menu">
+          ☰
+        </button>
+
+        <div class="header-info">
+          <div class="bot-avatar-small">⚖️</div>
+          <div>
+            <h2>LegalBot India</h2>
+            <span class="status-dot"></span>
+            <span class="status-text">Online — Ready to Help</span>
+          </div>
+        </div>
+
+        <!-- Voice Toggle button -->
+        <button class="voice-badge" id="voiceToggleBtn" onclick="toggleVoiceOutput()" style="cursor: pointer; border: 1px solid rgba(255,152,0,0.3); background: rgba(255, 152, 0, 0.1); color: #ff9800; font-family: 'Inter', sans-serif;">
+          <span id="voiceToggleIcon">🔇</span> <span id="voiceToggleText">Voice Off</span>
+        </button>
+      </header>
+
+      <!-- ---- Chat Messages Window ---- -->
+      <div class="chat-messages" id="chatMessages" role="log" aria-live="polite" aria-label="Chat messages">
+
+        <!-- Welcome message (shown at start) -->
+        <div class="welcome-screen" id="welcomeScreen">
+          <div class="welcome-icon">⚖️</div>
+          <h2>Hello! I am LegalBot India 🙏</h2>
+          <p>I will help you understand Indian laws and women safety laws in simple English. Ask any law-related question!</p>
+          <div class="welcome-chips">
+            <button onclick="setInput('What is the Domestic Violence Act 2005?')">What is Domestic Violence Act 2005?</button>
+            <button onclick="setInput('What does the Dowry prohibition act say?')">What are the dowry laws?</button>
+            <button onclick="setInput('What to do about workplace harassment?')">Workplace harassment?</button>
+            <button onclick="setInput('What is IPC section 376?')">What is IPC 376?</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ---- Typing Indicator ---- -->
+      <div class="typing-indicator" id="typingIndicator" style="display:none;" aria-label="Bot is typing">
+        <div class="bot-avatar-tiny">⚖️</div>
+        <div class="typing-dots">
+          <span></span><span></span><span></span>
+        </div>
+        <span class="typing-text">LegalBot is thinking...</span>
+      </div>
+
+      <!-- ---- Voice Status Bar ---- -->
+      <div class="voice-status" id="voiceStatus" style="display:none;">
+        <div class="voice-wave">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <span id="voiceStatusText">Listening... Please speak! 🎤</span>
+      </div>
+
+      <!-- ---- Input Bar ---- -->
+      <div class="input-area">
+        <div class="input-box-wrapper">
+
+          <!-- Text input -->
+          <textarea
+            id="userInput"
+            class="user-input"
+            placeholder="Type your question here... (e.g., What is the Domestic Violence Act?)"
+            rows="1"
+            aria-label="Type your legal question"
+            onkeydown="handleKeyDown(event)"
+            oninput="autoResize(this)"
+          ></textarea>
+
+          <!-- Action Buttons -->
+          <div class="input-actions">
+
+            <!-- Microphone Button (Voice Input) -->
+            <button
+              class="mic-btn"
+              id="micBtn"
+              onclick="toggleVoiceInput()"
+              aria-label="Click to speak your question"
+              title="Voice Input — Click to Speak"
+            >
+              🎤
+            </button>
+
+            <!-- Send Button -->
+            <button
+              class="send-btn"
+              id="sendBtn"
+              onclick="sendMessage()"
+              aria-label="Send message"
+              title="Send Message"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+              </svg>
+            </button>
+
+          </div>
+        </div>
+
+        <!-- Disclaimer text -->
+        <p class="disclaimer">
+          ⚠️ LegalBot provides general legal information only. AI can sometimes make mistakes or "hallucinate" facts. For serious cases, please consult a qualified lawyer.
+        </p>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ======== TOAST NOTIFICATION ======== -->
+  <div class="toast" id="toast" role="alert" aria-live="assertive"></div>
+
+  <!-- ======== MAIN JAVASCRIPT ======== -->
+  <script src="script.js"></script>
+
+</body>
+</html>
