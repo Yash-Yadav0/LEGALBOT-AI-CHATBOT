@@ -4,10 +4,23 @@
 // ============================================================
 
 // ---------- 1. Configuration ----------
+// Automatically use correct URL for local dev vs production deployment
+const getBaseUrl = () => {
+  // If running from file:// or a different local port (like VS Code Live Server)
+  if (window.location.protocol === 'file:' || 
+     ((window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') && window.location.port !== '5000')) {
+    return "http://localhost:5000";
+  }
+  // If deployed or running from the actual backend port, use relative paths
+  return "";
+};
+
+const BASE_URL = getBaseUrl();
+
 const CONFIG = {
   // Backend URL
-  API_URL: "http://localhost:5000/chat",
-  CLEAR_URL: "http://localhost:5000/clear",
+  API_URL: BASE_URL + "/chat",
+  CLEAR_URL: BASE_URL + "/clear",
   SESSION_ID: "session_" + Date.now(), // Unique session per tab
 };
 
