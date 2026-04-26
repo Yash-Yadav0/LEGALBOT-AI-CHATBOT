@@ -5,9 +5,9 @@
 
 // ---------- 1. Configuration ----------
 const CONFIG = {
-  // Backend URL — now pointing to the live Render deployment
-  API_URL: "https://legalbot-ai-chatbot.onrender.com/chat",
-  CLEAR_URL: "https://legalbot-ai-chatbot.onrender.com/clear",
+  // Backend URL
+  API_URL: "http://localhost:5000/chat",
+  CLEAR_URL: "http://localhost:5000/clear",
   SESSION_ID: "session_" + Date.now(), // Unique session per tab
 };
 

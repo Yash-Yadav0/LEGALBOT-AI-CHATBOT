@@ -1,7 +1,8 @@
 // ============================================================
 //   LegalBot India - Backend Server (Node.js + Express)
-//   Domain : Indian Laws & Women Safety Laws
-//   AI     : Google Gemini API
+//   Domain  : Indian Laws & Women Safety Laws
+//   AI      : MULTI-PROVIDER — Groq → Gemini → OpenRouter
+//   Version : 2.0.0 — Never-Stop Architecture
 // ============================================================
 
 // ---------- 1. Load environment variables ----------
@@ -11,26 +12,91 @@ require("dotenv").config();
 const express = require("express");
 const cors    = require("cors");
 const path    = require("path");
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { OpenAI } = require("openai");
 
 // ---------- 3. Create Express app ----------
 const app  = express();
 const PORT = process.env.PORT || 5000;
 
 // ---------- 4. Middleware ----------
-
-// CORS – allow ALL origins (works for file://, localhost, Vercel, etc.)
-// origin: true mirrors the request origin — perfect for college demo
 app.use(cors({ origin: true, methods: ["GET", "POST"], allowedHeaders: ["Content-Type"] }));
-
-// Serve frontend files from backend so browser opens via http:// (no file:// issues)
 app.use(express.static(path.join(__dirname, "../frontend")));
-
-// Parse incoming JSON bodies
 app.use(express.json());
 
-// ---------- 5. Initialize Gemini AI ----------
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// ---------- 5. MULTI-PROVIDER SETUP ----------
+// Each provider uses the OpenAI-compatible SDK.
+// Providers are tried IN ORDER. Within each provider, models are tried in order.
+// As long as ONE provider + model works, the bot responds. 🚀
+
+const PROVIDERS = [];
+
+// ── Provider 1: GROQ (Fastest — 30 req/min free) ──────────────────────────────
+// Get free key → https://console.groq.com  (no credit card needed)
+if (process.env.GROQ_API_KEY) {
+  PROVIDERS.push({
+    name: "Groq",
+    client: new OpenAI({
+      baseURL: "https://api.groq.com/openai/v1",
+      apiKey : process.env.GROQ_API_KEY,
+    }),
+    models: [
+      "llama-3.3-70b-versatile",   // Best quality — 30 req/min
+      "llama-3.1-8b-instant",      // Fastest — 30 req/min
+      "gemma2-9b-it",              // Google Gemma on Groq
+    ],
+  });
+}
+
+// ── Provider 2: GOOGLE GEMINI (15 req/min, 1500 req/day free) ─────────────────
+// Get free key → https://aistudio.google.com  (no credit card needed)
+if (process.env.GEMINI_API_KEY) {
+  PROVIDERS.push({
+    name: "Gemini",
+    client: new OpenAI({
+      // Gemini supports OpenAI-compatible API — no extra package needed!
+      baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
+      apiKey : process.env.GEMINI_API_KEY,
+    }),
+    models: [
+      "gemini-2.5-flash",       // Latest Gemini — fast & smart
+      "gemini-2.5-pro",         // More capable model
+      "gemini-2.0-flash-lite",  // Lightest Gemini
+    ],
+  });
+}
+
+// ── Provider 3: OPENROUTER (Many free models) ─────────────────────────────────
+// Get free key → https://openrouter.ai/keys  (no credit card needed)
+if (process.env.OPENROUTER_API_KEY) {
+  PROVIDERS.push({
+    name: "OpenRouter",
+    client: new OpenAI({
+      baseURL: "https://openrouter.ai/api/v1",
+      apiKey : process.env.OPENROUTER_API_KEY,
+      defaultHeaders: {
+        "HTTP-Referer": "http://localhost:5000",
+        "X-Title"     : "LegalBot India",
+      },
+    }),
+    models: [
+      "openai/gpt-oss-20b:free",
+      "meta-llama/llama-3.3-70b-instruct:free",
+      "google/gemma-3-27b-it:free",
+      "nvidia/nemotron-3-super-120b-a12b:free",
+      "qwen/qwen3-next-80b-a3b-instruct:free",
+      "google/gemma-3-12b-it:free",
+    ],
+  });
+}
+
+// Warn if no providers are configured
+if (PROVIDERS.length === 0) {
+  console.error("❌ FATAL: No API keys found in .env! Add at least one of:");
+  console.error("   GROQ_API_KEY, GEMINI_API_KEY, or OPENROUTER_API_KEY");
+}
+
+// Helper: sleep N ms (used between 429 retries)
+const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 
 // ---------- 6. System Prompt (the "brain" of the bot) ----------
 const SYSTEM_PROMPT = `
@@ -86,104 +152,129 @@ EMERGENCY NUMBERS TO MENTION WHEN RELEVANT:
 `;
 
 // ---------- 7. In-memory chat history (per session) ----------
-// Note: In production, use a database (MongoDB) for persistent history
 const chatSessions = {}; // sessionId → array of messages
 
 // ---------- 8. Helper — get or create chat session ----------
 function getSession(sessionId) {
   if (!chatSessions[sessionId]) {
-    chatSessions[sessionId] = []; // fresh conversation
+    chatSessions[sessionId] = [];
   }
   return chatSessions[sessionId];
 }
 
-// ---------- 9. POST /chat — Main chat endpoint ----------
+// ---------- 9. Core AI call — tries all providers & models ----------
+async function callAI(messages) {
+  let lastError = null;
+
+  for (const provider of PROVIDERS) {
+    for (const model of provider.models) {
+      try {
+        console.log(`🔄 Trying [${provider.name}] → ${model}`);
+        const response = await provider.client.chat.completions.create({
+          model,
+          messages,
+          temperature: 0.3,
+          top_p      : 0.8,
+          max_tokens : 1024,
+        });
+        const text = response.choices[0].message.content;
+        if (!text) throw new Error("Empty response from model");
+        console.log(`✅ Success! [${provider.name}] → ${model}`);
+        return { text, provider: provider.name, model };
+      } catch (err) {
+        const code = err.status || err.code || "ERR";
+        console.warn(`⚠️  [${provider.name}] ${model} failed (${code}): ${err.message?.slice(0, 80)}`);
+        lastError = err;
+
+        // If API key is invalid, skip this provider completely
+        if (err.status === 401) {
+          console.error(`🔑 Bad API key for [${provider.name}] — skipping to next provider`);
+          break;
+        }
+
+        // If rate limited, don't waste time trying other models on the SAME provider — it'll be slow and just hit the limit again.
+        // Skip directly to the next provider for a faster response.
+        if (err.status === 429) {
+          console.warn(`🐌 Rate limited by [${provider.name}] — immediately failing over to next provider`);
+          break;
+        }
+      }
+    }
+  }
+
+  // All providers failed
+  throw lastError || new Error("All AI providers exhausted");
+}
+
+// ---------- 10. POST /chat — Main chat endpoint ----------
 app.post("/chat", async (req, res) => {
   try {
     const { message, sessionId } = req.body;
 
     // Validate input
     if (!message || message.trim() === "") {
-      return res.status(400).json({
-        error: "Message cannot be empty. Kuch to poochho! 😊",
-      });
+      return res.status(400).json({ error: "Message cannot be empty. Kuch to poochho! 😊" });
     }
 
     // Get this user's chat history
     const history = getSession(sessionId || "default");
 
-    // ---- Build the Gemini model ----
-    const model = genAI.getGenerativeModel({
-      model: "gemini-flash-latest",   // Using generic latest to bypass overloaded specific models
-      generationConfig: {
-        temperature: 0.3,           // Low = more factual, accurate answers
-        topP: 0.8,                  // Controls diversity of response
-        maxOutputTokens: 1024,      // Max length of reply
-      },
-      systemInstruction: SYSTEM_PROMPT,
-    });
+    // Save user message
+    history.push({ role: "user", content: message });
 
-    // ---- Start or continue chat ----
-    const chat = model.startChat({
-      history: history,             // Pass previous messages for memory
-    });
+    // Build full message list (system prompt + history)
+    const messages = [
+      { role: "system", content: SYSTEM_PROMPT },
+      ...history,
+    ];
 
-    // ---- Send user message to Gemini ----
-    const result = await chat.sendMessage(message);
-    let botReply = "";
-    try {
-      botReply = result.response.text();
-      if (!botReply) throw new Error("Empty response");
-    } catch (textErr) {
-      console.error("⚠️ Failed to parse response text (likely gibberish or blocked):", textErr.message);
-      botReply = "I am sorry, I couldn't understand that. Please ask a clear question related to Indian Laws or Women's Safety.";
-    }
-    // ---- Save conversation history ----
-    history.push({ role: "user",  parts: [{ text: message  }] });
-    history.push({ role: "model", parts: [{ text: botReply }] });
+    // Call AI with multi-provider fallback
+    const { text: botReply, provider, model } = await callAI(messages);
+
+    // Save bot reply to history
+    history.push({ role: "assistant", content: botReply });
 
     // Keep history to last 20 messages to save memory
-    if (history.length > 20) {
-      history.splice(0, 2); // Remove oldest pair
-    }
+    if (history.length > 20) history.splice(0, 2);
 
-    // ---- Send response back to frontend ----
+    // Send response
     res.json({
-      success : true,
-      reply   : botReply,
+      success  : true,
+      reply    : botReply,
       sessionId: sessionId || "default",
+      provider,  // e.g. "Groq", "Gemini", "OpenRouter"
+      model,     // e.g. "llama-3.3-70b-versatile"
     });
 
   } catch (error) {
-    console.error("❌ Error from Gemini API:", error.message);
+    console.error("❌ All providers failed:", error.message);
 
-    // Handle specific API errors
-    if (error.message.includes("API_KEY_INVALID")) {
-      return res.status(401).json({
-        error: "Invalid API key. Please check your .env file.",
-      });
+    if (error.status === 401 || error.message?.includes("401")) {
+      return res.status(401).json({ error: "Invalid API key. Please check your .env file." });
+    }
+    if (error.status === 429 || error.message?.includes("429")) {
+      return res.status(429).json({ error: "All providers are rate-limited right now. Please wait 30 seconds and try again." });
     }
 
-    if (error.message.includes("QUOTA_EXCEEDED") || error.message.includes("429 Too Many Requests") || error.message.includes("quota")) {
-      return res.status(429).json({
-        error: "Google API Quota Limit Reached! The free tier only allows 15 questions per minute. Please wait exactly 1 minute before asking your next question.",
-      });
-    }
-
-    res.status(500).json({
-      error: "Server error. Please wait a moment and try again.",
-    });
+    res.status(500).json({ error: "All AI providers failed. Please try again in a moment." });
   }
 });
 
-// ---------- 10. GET /health — Health check (JSON) ----------
+// ---------- 11. GET /health — Health check ----------
 app.get("/health", (req, res) => {
+  const providerStatus = PROVIDERS.map(p => ({
+    name  : p.name,
+    models: p.models.length,
+    active: true,
+  }));
+
   res.json({
-    status  : "✅ LegalBot India Backend is Running!",
-    version : "1.0.0",
-    message : "POST /chat endpoint is ready",
-    model   : "Google Gemini 1.5 Flash",
-    domain  : "Indian Laws & Women Safety",
+    status   : "✅ LegalBot India Backend is Running!",
+    version  : "2.0.0",
+    message  : "Multi-provider AI — Never-Stop Architecture",
+    providers: providerStatus,
+    totalProviders: PROVIDERS.length,
+    domain   : "Indian Laws & Women Safety",
   });
 });
 
@@ -192,7 +283,7 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/index.html"));
 });
 
-// ---------- 11. POST /clear — Clear chat history ----------
+// ---------- 12. POST /clear — Clear chat history ----------
 app.post("/clear", (req, res) => {
   const { sessionId } = req.body;
   if (chatSessions[sessionId || "default"]) {
@@ -201,17 +292,35 @@ app.post("/clear", (req, res) => {
   res.json({ success: true, message: "Chat history cleared!" });
 });
 
-// ---------- 12. Handle 404 routes ----------
+// ---------- 13. Handle 404 routes ----------
 app.use((req, res) => {
-  res.status(404).json({ error: "Route not found. Yeh route exist nahi karta!" });
+  res.status(404).json({ error: "Route not found." });
 });
 
-// ---------- 13. Start the server ----------
+// ---------- 14. Start the server ----------
 app.listen(PORT, () => {
-  console.log("===========================================");
-  console.log("  🇮🇳 LegalBot India Backend Started!");
-  console.log(`  🌐 Open chatbot at: http://localhost:${PORT}`);
-  console.log(`  📡 POST /chat — Chat endpoint ready`);
-  console.log(`  🔑 API Key: ${process.env.GEMINI_API_KEY ? "✅ Loaded" : "❌ Missing!"}`);
-  console.log("===========================================");
+  console.log("==============================================");
+  console.log("  🇮🇳  LegalBot India  v2.0 — Never-Stop!");
+  console.log("==============================================");
+  console.log(`  🌐 Open    : http://localhost:${PORT}`);
+  console.log(`  📡 Chat    : POST /chat`);
+  console.log(`  ⚕️  Health  : http://localhost:${PORT}/health`);
+  console.log("----------------------------------------------");
+  console.log("  🔌 ACTIVE PROVIDERS:");
+  if (PROVIDERS.length === 0) {
+    console.log("  ❌  None! Add API keys to .env file!");
+  } else {
+    PROVIDERS.forEach((p, i) => {
+      console.log(`  ${i + 1}. ✅ ${p.name.padEnd(12)} (${p.models.length} models)`);
+    });
+  }
+  console.log("----------------------------------------------");
+  console.log("  💡 Add more keys to .env for more uptime:");
+  if (!process.env.GROQ_API_KEY)
+    console.log("     ➕ GROQ_API_KEY    → https://console.groq.com");
+  if (!process.env.GEMINI_API_KEY)
+    console.log("     ➕ GEMINI_API_KEY  → https://aistudio.google.com");
+  if (!process.env.OPENROUTER_API_KEY)
+    console.log("     ➕ OPENROUTER_API_KEY → https://openrouter.ai/keys");
+  console.log("==============================================");
 });
