@@ -395,6 +395,11 @@ const QUICK_QUERIES = {
   rti:      "What is the RTI Act 2005? How can we request information from the government?",
   stalking: "Someone is stalking me and messaging me constantly. What legal action can I take?",
   cyber:    "My private photos were shared online without my consent. What should I do?",
+  workplace:"My employer is not paying my pending salary. What legal action can I take?",
+  property: "What are my rights if there is a dispute over ancestral property in my family?",
+  consumer: "I bought a defective product online and the company refuses a refund. How do I file a consumer complaint?",
+  tenant:   "My landlord is forcing me to vacate the house immediately without any notice. What are my rights as a tenant?",
+  blackmail:"Someone is blackmailing me with my private photos online. Where and how should I report this cyber crime?",
 };
 
 function sendQuickQuery(category) {
