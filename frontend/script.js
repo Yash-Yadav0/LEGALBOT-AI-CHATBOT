@@ -393,6 +393,8 @@ const QUICK_QUERIES = {
   divorce:  "What are the divorce laws in India? What does the Hindu Marriage Act say?",
   traffic:  "What are the traffic rules under the Motor Vehicles Act? How much is the fine?",
   rti:      "What is the RTI Act 2005? How can we request information from the government?",
+  stalking: "Someone is stalking me and messaging me constantly. What legal action can I take?",
+  cyber:    "My private photos were shared online without my consent. What should I do?",
 };
 
 function sendQuickQuery(category) {
@@ -449,9 +451,10 @@ async function clearChat() {
     <h2>Hello! I am LegalBot India 🙏</h2>
     <p>Start a new conversation. Ask any law-related question in English!</p>
     <div class="welcome-chips">
-      <button onclick="setInput('What is the Domestic Violence Act?')">Domestic Violence Act?</button>
-      <button onclick="setInput('What are the Dowry Laws?')">Dowry Laws?</button>
-      <button onclick="setInput('What is IPC 376?')">IPC 376?</button>
+      <button onclick="setInput('My in-laws are demanding dowry and threatening me. What should I do?')">In-laws demanding dowry?</button>
+      <button onclick="setInput('Someone is stalking me and messaging me constantly online. Is this a crime?')">Online Stalking?</button>
+      <button onclick="setInput('I am facing domestic violence at home. Where can I get immediate legal help?')">Facing Domestic Violence?</button>
+      <button onclick="setInput('My boss is making me uncomfortable with inappropriate comments. What are my rights?')">Workplace Harassment?</button>
     </div>`;
   chatMessages.appendChild(welcome);
 
