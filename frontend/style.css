@@ -622,6 +622,92 @@ body {
 }
 
 /* ============================================
+   BOT META ROW — AI Disclaimer + Confidence Badge
+   ============================================ */
+.bot-meta-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.ai-disclaimer {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2px 10px;
+  letter-spacing: 0.3px;
+}
+
+/* Confidence Badges */
+.conf-badge {
+  font-size: 0.62rem;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 2px 10px;
+  letter-spacing: 0.3px;
+}
+.conf-high {
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #4ade80;
+}
+.conf-medium {
+  background: rgba(234, 179, 8, 0.12);
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  color: #facc15;
+}
+.conf-low {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+}
+.conf-na, .conf-error {
+  background: rgba(100, 116, 139, 0.12);
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  color: var(--text-muted);
+}
+
+/* ============================================
+   FEEDBACK ROW — "Was this helpful?" Buttons
+   ============================================ */
+.feedback-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+.feedback-label {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+.feedback-btn {
+  font-size: 0.68rem;
+  padding: 3px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: all var(--transition);
+}
+.feedback-btn:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: scale(1.05);
+}
+.feedback-btn:disabled {
+  cursor: default;
+  transform: none;
+}
+
+/* ============================================
    RESPONSIVE — Mobile
    ============================================ */
 @media (max-width: 768px) {

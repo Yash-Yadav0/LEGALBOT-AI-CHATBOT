@@ -1,0 +1,270 @@
+{
+  "laws": [
+    {
+      "id": "ipc_354",
+      "title": "IPC Section 354 — Assault or Criminal Force on Woman with Intent to Outrage Modesty",
+      "keywords": ["354", "outrage modesty", "molest", "molestation", "touch", "assault woman", "groping", "inappropriate touch", "outrage", "modesty"],
+      "act": "Indian Penal Code, 1860",
+      "section": "Section 354",
+      "description": "Assault or criminal force to any woman, intending to outrage or knowing it to be likely that he will thereby outrage her modesty.",
+      "punishment": "Imprisonment of either description for a term which shall NOT be less than 1 year, but which may extend to 5 years, AND fine.",
+      "key_facts": [
+        "Minimum punishment: 1 year imprisonment (non-bailable)",
+        "Maximum punishment: 5 years imprisonment + fine",
+        "Cognizable and non-bailable offence",
+        "FIR can be registered at any police station",
+        "Attempt to commit this offence is also punishable under Section 354A, 354B, 354C, 354D"
+      ],
+      "sub_sections": {
+        "354A": "Sexual harassment and punishment (1–3 years or fine or both)",
+        "354B": "Assault/force to woman with intent to disrobe (3–7 years + fine)",
+        "354C": "Voyeurism — watching/capturing a woman in private act (1–3 years first offence; 3–7 years repeat)",
+        "354D": "Stalking (1–3 years first offence; 3–5 years repeat)"
+      },
+      "helpline": "100 (Police), 1091 (Women Helpline)"
+    },
+    {
+      "id": "ipc_376",
+      "title": "IPC Section 376 — Punishment for Rape",
+      "keywords": ["376", "rape", "sexual assault", "sexual violence", "gang rape", "marital rape", "rape law", "victim rape"],
+      "act": "Indian Penal Code, 1860",
+      "section": "Section 376",
+      "description": "Whoever commits rape shall be punished with rigorous imprisonment of either description for a term which shall NOT be less than 10 years, but which may extend to imprisonment for life.",
+      "punishment": "Minimum 10 years rigorous imprisonment, extendable to life imprisonment + fine. In aggravated cases: minimum 20 years to life.",
+      "key_facts": [
+        "Minimum 10 years rigorous imprisonment",
+        "If victim is below 16 years: minimum 20 years (Section 376AB)",
+        "Gang rape (376D): minimum 20 years to life",
+        "Rape by police/public servant: minimum 10 years",
+        "POCSO Act 2012 applies when victim is a child (below 18)",
+        "Victim identity must NOT be disclosed — punishable under Section 228A IPC",
+        "Medical examination of victim must be done by female doctor",
+        "FIR must be registered. Cannot be refused by police.",
+        "Free legal aid available to victim"
+      ],
+      "process": [
+        "Step 1: Call Police 100 or go to nearest police station — FIR will be registered",
+        "Step 2: Medical examination within 24 hours (preserve evidence)",
+        "Step 3: Statement to magistrate under Section 164 CrPC",
+        "Step 4: Trial in Fast Track Court (mandatory in rape cases)",
+        "Step 5: Victim compensation under Section 357A CrPC"
+      ],
+      "helpline": "100 (Police), 1091 (Women Helpline), 181 (Domestic Violence)"
+    },
+    {
+      "id": "ipc_498a",
+      "title": "IPC Section 498A — Cruelty by Husband or Relatives",
+      "keywords": ["498a", "498-a", "cruelty husband", "cruelty", "husband cruelty", "in-laws", "harassment by husband", "mental cruelty", "dowry harassment", "husband torture"],
+      "act": "Indian Penal Code, 1860",
+      "section": "Section 498A",
+      "description": "Whoever, being the husband or a relative of the husband of a woman, subjects such woman to cruelty shall be punished. Cruelty includes willful conduct likely to drive woman to suicide, grave injury to life/limb/health, or harassment over dowry demands.",
+      "punishment": "Imprisonment up to 3 years AND fine.",
+      "key_facts": [
+        "Cognizable, non-bailable, and non-compoundable offence",
+        "Both husband AND his relatives can be charged",
+        "Cruelty includes: physical abuse, mental harassment, dowry demands",
+        "FIR can be filed by wife OR her relatives",
+        "Accused can be arrested without warrant",
+        "Police must complete investigation within 60 days",
+        "Often used together with Domestic Violence Act 2005"
+      ],
+      "helpline": "100 (Police), 1091 (Women Helpline), 181 (Domestic Violence)"
+    },
+    {
+      "id": "domestic_violence_act",
+      "title": "Protection of Women from Domestic Violence Act, 2005",
+      "keywords": ["domestic violence", "domestic abuse", "dvact", "dv act", "domestic violence act", "protection order", "residence order", "maintenance", "husband beat", "husband hit", "husband abuse", "family violence", "violence at home", "abuse home"],
+      "act": "Protection of Women from Domestic Violence Act, 2005",
+      "section": "Full Act",
+      "description": "Provides protection to women from domestic violence — physical, sexual, verbal, emotional, and economic abuse — by husband or live-in partner or their family members.",
+      "key_rights": [
+        "Protection Order: Court can prohibit abuser from committing any act of domestic violence",
+        "Residence Order: Woman cannot be evicted from shared household",
+        "Monetary Relief: Maintenance, medical expenses, loss of earnings",
+        "Custody Order: Temporary custody of children",
+        "Compensation Order: For injuries caused by domestic violence"
+      ],
+      "who_can_apply": "Any woman who is or has been in a domestic relationship (wife, live-in partner, sister, mother, daughter)",
+      "how_to_apply": [
+        "Step 1: Contact Protection Officer (in every district)",
+        "Step 2: File Domestic Incident Report (DIR)",
+        "Step 3: Magistrate court can pass protection order within 3 days",
+        "Step 4: Emergency protection available same day"
+      ],
+      "punishment": "Breach of protection order — imprisonment up to 1 year OR fine up to Rs.20,000 or both",
+      "helpline": "181 (Domestic Violence Helpline), 100 (Police), 1091 (Women Helpline)"
+    },
+    {
+      "id": "dowry_prohibition_act",
+      "title": "Dowry Prohibition Act, 1961",
+      "keywords": ["dowry", "dowry demand", "dahej", "dowry prohibition", "dowry death", "dowry harassment", "dowry law", "taking dowry", "giving dowry", "section 304b", "dowry killing"],
+      "act": "Dowry Prohibition Act, 1961",
+      "section": "Full Act",
+      "description": "Makes giving and taking of dowry a criminal offence in India. Also prohibits demanding dowry before, at, or after marriage.",
+      "key_provisions": [
+        "Section 3: Giving or taking dowry — imprisonment 5 years + fine Rs.15,000 or value of dowry (whichever higher)",
+        "Section 4: Demanding dowry — imprisonment 6 months to 2 years + fine up to Rs.10,000",
+        "Section 304B IPC: Dowry Death — if woman dies within 7 years of marriage due to dowry harassment — imprisonment 7 years to life",
+        "Section 113B Evidence Act: Presumption of dowry death — burden of proof on husband/relatives"
+      ],
+      "important_facts": [
+        "Both giving AND taking dowry is illegal",
+        "Demanding dowry is also illegal (even if not given)",
+        "Stridhan (woman's own property/gifts) is NOT dowry — woman has full rights to it",
+        "Dowry death (304B) is non-bailable, cognizable offence",
+        "Complaint can be filed by woman, her parents, or any relative"
+      ],
+      "helpline": "181 (Domestic Violence), 1091 (Women Helpline), 100 (Police)"
+    },
+    {
+      "id": "posh_act",
+      "title": "Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013 — POSH Act",
+      "keywords": ["posh", "posh act", "sexual harassment workplace", "workplace harassment", "office harassment", "boss harassment", "harassment office", "sexual harassment work", "inappropriate behavior work", "hostile work environment", "icc", "internal complaints committee"],
+      "act": "Sexual Harassment of Women at Workplace Act, 2013",
+      "section": "Full Act",
+      "description": "Provides protection to women from sexual harassment at the workplace and establishes mechanism for redressal of complaints.",
+      "what_is_sexual_harassment": [
+        "Unwelcome physical contact or advances",
+        "Demand or request for sexual favours",
+        "Sexually coloured remarks",
+        "Showing pornography",
+        "Any other unwelcome physical, verbal or non-verbal conduct of sexual nature"
+      ],
+      "key_provisions": [
+        "Every employer with 10+ employees must constitute Internal Complaints Committee (ICC)",
+        "ICC must have a woman as Presiding Officer",
+        "At least 50% members of ICC must be women",
+        "Complaint must be filed within 3 months of incident",
+        "ICC inquiry must complete within 90 days",
+        "Employer can be fined Rs.50,000 for first offence; licence cancellation for repeat"
+      ],
+      "process": [
+        "Step 1: File written complaint to ICC of your organization",
+        "Step 2: If no ICC exists or employer ignores — file with Local Complaints Committee (LCC) at District level",
+        "Step 3: ICC/LCC inquiry within 90 days",
+        "Step 4: If proven — punishment includes warning, fine, termination",
+        "Step 5: Can also file criminal complaint under IPC 354A"
+      ],
+      "punishment": "Employer fine: Rs.50,000 first offence; licence revocation for repeat offence",
+      "helpline": "1091 (Women Helpline), 100 (Police)"
+    },
+    {
+      "id": "rti_act",
+      "title": "Right to Information Act, 2005 — RTI Act",
+      "keywords": ["rti", "right to information", "information act", "government information", "rti application", "rti filing", "public information", "transparency", "rti act 2005", "information request"],
+      "act": "Right to Information Act, 2005",
+      "section": "Full Act",
+      "description": "Gives every Indian citizen the right to request information from any public authority. Promotes transparency and accountability in government.",
+      "key_rights": [
+        "Any citizen of India can file RTI",
+        "Can request copies of documents, records, files",
+        "Can inspect government documents",
+        "Can request certified sample of any government material"
+      ],
+      "process": [
+        "Step 1: Write RTI application on plain paper or online at rtionline.gov.in",
+        "Step 2: Address to Public Information Officer (PIO) of the concerned department",
+        "Step 3: Pay Rs.10 application fee (free for BPL card holders)",
+        "Step 4: PIO must respond within 30 days (48 hours if life/liberty at stake)",
+        "Step 5: If denied or no reply — file First Appeal within 30 days",
+        "Step 6: Second Appeal to Central/State Information Commission"
+      ],
+      "exemptions": [
+        "National security and sovereignty matters",
+        "Cabinet papers under deliberation",
+        "Personal privacy information",
+        "Trade secrets",
+        "Information that would endanger life of informant"
+      ],
+      "penalty": "PIO can be fined Rs.250 per day of delay (max Rs.25,000) for non-compliance",
+      "helpline": "RTI Online Portal: rtionline.gov.in, Central Information Commission: 011-26186536"
+    },
+    {
+      "id": "pocso_act",
+      "title": "Protection of Children from Sexual Offences Act, 2012 — POCSO Act",
+      "keywords": ["pocso", "child abuse", "child sexual abuse", "minor abuse", "child molestation", "child protection", "minor", "child rape", "child harassment"],
+      "act": "Protection of Children from Sexual Offences Act, 2012",
+      "section": "Full Act",
+      "description": "Protects children below 18 years from sexual abuse and exploitation. Provides for speedy trial through Special Courts.",
+      "key_provisions": [
+        "Child = any person below 18 years of age",
+        "Penetrative sexual assault (rape) on child — minimum 10 years to life + fine",
+        "Aggravated penetrative assault (by relative, position of trust) — minimum 20 years to life",
+        "Sexual assault — minimum 3 years to 5 years + fine",
+        "Sexual harassment of child — up to 3 years + fine",
+        "Child pornography — 5–7 years + fine"
+      ],
+      "mandatory_reporting": "Any person (including doctor, teacher) who has knowledge of POCSO offence MUST report to police — failure is punishable by 6 months imprisonment",
+      "special_features": [
+        "Evidence recorded by female officer if victim is girl",
+        "Trial in camera (closed court)",
+        "Child's identity cannot be disclosed",
+        "Speedy trial mandatory in Special Court",
+        "Compensation to child victim"
+      ],
+      "helpline": "1098 (Childline), 100 (Police)"
+    },
+    {
+      "id": "ipc_stalking_cybercrime",
+      "title": "IPC Section 354D — Stalking & IT Act — Cyber Crimes",
+      "keywords": ["stalking", "cyber stalking", "online harassment", "messaging constantly", "following", "social media harassment", "online threat", "cyber crime", "it act", "hacking", "private photos", "morphed photos", "revenge porn", "non-consensual", "blackmail online"],
+      "act": "Indian Penal Code (Section 354D) and Information Technology Act, 2000",
+      "section": "Section 354D IPC, Section 66E and 67A IT Act",
+      "description": "Stalking (online or physical) and cyber crimes against women are criminal offences under IPC and IT Act.",
+      "key_provisions": [
+        "Section 354D IPC: Stalking — following, contacting, monitoring online without consent — 1–3 years (1st offence), 3–5 years (repeat)",
+        "Section 66E IT Act: Capturing/publishing private images without consent — up to 3 years + fine Rs.2 lakh",
+        "Section 67A IT Act: Publishing sexually explicit material — 5 years + fine Rs.10 lakh (first offence)",
+        "Section 66C: Identity theft / impersonation — 3 years + fine Rs.1 lakh",
+        "Section 66D: Cheating by impersonation — 3 years + fine Rs.1 lakh"
+      ],
+      "how_to_report": [
+        "Step 1: File complaint at Cyber Crime Portal: cybercrime.gov.in",
+        "Step 2: Call Cyber Helpline: 1930",
+        "Step 3: Report to nearest police station (mention IT Act sections)",
+        "Step 4: Preserve evidence — screenshots, call logs, messages",
+        "Step 5: Report offending profile to social media platform"
+      ],
+      "helpline": "1930 (Cyber Crime Helpline), 100 (Police), 1091 (Women Helpline)"
+    },
+    {
+      "id": "legal_aid",
+      "title": "Free Legal Aid in India — Legal Services Authorities Act, 1987",
+      "keywords": ["free lawyer", "legal aid", "legal help free", "free legal", "nalsa", "legal services", "poor legal help", "lawyer cost", "legal aid free"],
+      "act": "Legal Services Authorities Act, 1987",
+      "section": "Full Act",
+      "description": "Every Indian citizen has the right to free legal aid if they cannot afford a lawyer. NALSA (National Legal Services Authority) provides free legal services.",
+      "who_qualifies": [
+        "Women and children",
+        "Members of SC/ST",
+        "Victims of natural disasters, mass disasters",
+        "Industrial workmen",
+        "Persons with disabilities",
+        "Persons with annual income below Rs.3 lakh (varies by state)"
+      ],
+      "how_to_get": [
+        "Contact District Legal Services Authority (DLSA) in your district",
+        "Call NALSA Helpline: 15100",
+        "Visit State Legal Services Authority (SLSA)",
+        "Apply online at nalsa.gov.in"
+      ],
+      "helpline": "15100 (Legal Aid Helpline)"
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "lastUpdated": "2025-04-28",
+    "jurisdiction": "India",
+    "disclaimer": "This knowledge base contains verified Indian laws for RAG-based retrieval. Laws may be amended. Always verify with official government sources or consult a qualified lawyer.",
+    "sources": [
+      "Indian Penal Code, 1860",
+      "Protection of Women from Domestic Violence Act, 2005",
+      "Dowry Prohibition Act, 1961",
+      "Sexual Harassment of Women at Workplace Act, 2013",
+      "Right to Information Act, 2005",
+      "Protection of Children from Sexual Offences Act, 2012",
+      "Information Technology Act, 2000",
+      "Legal Services Authorities Act, 1987"
+    ]
+  }
+}

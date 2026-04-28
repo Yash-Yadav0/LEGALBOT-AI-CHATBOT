@@ -18,10 +18,10 @@ const getBaseUrl = () => {
 const BASE_URL = getBaseUrl();
 
 const CONFIG = {
-  // Backend URL
-  API_URL: BASE_URL + "/chat",
-  CLEAR_URL: BASE_URL + "/clear",
-  SESSION_ID: "session_" + Date.now(), // Unique session per tab
+  API_URL     : BASE_URL + "/chat",
+  CLEAR_URL   : BASE_URL + "/clear",
+  FEEDBACK_URL: BASE_URL + "/feedback",
+  SESSION_ID  : "session_" + Date.now(),
 };
 
 // ---------- 2. DOM References ----------
@@ -69,14 +69,10 @@ async function sendMessage(text) {
   showTyping(true);
 
   try {
-    // POST request to backend
     const response = await fetch(CONFIG.API_URL, {
-      method: "POST",
+      method : "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        message:   message,
-        sessionId: CONFIG.SESSION_ID,
-      }),
+      body   : JSON.stringify({ message, sessionId: CONFIG.SESSION_ID }),
     });
 
     const data = await response.json();
@@ -85,19 +81,23 @@ async function sendMessage(text) {
       throw new Error(data.error || "Server error");
     }
 
-    // Show bot reply
     showTyping(false);
-    appendMessage("bot", data.reply);
+    appendBotMessage(data.reply, {
+      confidence    : data.confidenceScore || "Medium",
+      ragUsed       : data.ragUsed || false,
+      domainRejected: data.domainRejected || false,
+      provider      : data.provider,
+      model         : data.model,
+    });
 
-    // 🔊 Speak the bot's reply using TTS if enabled
-    if (isVoiceOutputEnabled) {
-      speakText(data.reply);
-    }
+    if (isVoiceOutputEnabled) speakText(data.reply);
 
   } catch (error) {
     showTyping(false);
-    const errMsg = "Sorry, something went wrong! 😔 Please check your internet connection or try again.\n\nError: " + error.message;
-    appendMessage("bot", errMsg);
+    appendBotMessage(
+      "Sorry, something went wrong. Please check your internet connection or try again.\n\nError: " + error.message,
+      { confidence: "Error", ragUsed: false, domainRejected: false }
+    );
     console.error("❌ Fetch error:", error);
   } finally {
     sendBtn.disabled = false;
@@ -109,23 +109,22 @@ async function sendMessage(text) {
 //   SECTION B — APPEND MESSAGE BUBBLE
 // ============================================================
 
+// Append user message
 function appendMessage(role, text) {
   messageCount++;
-
   const row = document.createElement("div");
   row.className = `message-row ${role}`;
 
   const avatar = document.createElement("div");
   avatar.className = `msg-avatar ${role}`;
-  avatar.textContent = role === "bot" ? "⚖️" : "👤";
+  avatar.textContent = "👤";
 
   const content = document.createElement("div");
   content.className = "msg-content";
 
   const bubble = document.createElement("div");
   bubble.className = `bubble ${role}`;
-  // Format bot text (convert **bold** and newlines)
-  bubble.innerHTML = role === "bot" ? formatBotText(text) : escapeHtml(text);
+  bubble.innerHTML = escapeHtml(text);
 
   const time = document.createElement("div");
   time.className = "msg-time";
@@ -133,13 +132,71 @@ function appendMessage(role, text) {
 
   content.appendChild(bubble);
   content.appendChild(time);
+  row.appendChild(avatar);
+  row.appendChild(content);
+  chatMessages.appendChild(row);
+  chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: "smooth" });
+}
+
+// Append bot message with metadata (confidence, RAG badge, feedback)
+let botMsgIndex = 0;
+function appendBotMessage(text, meta = {}) {
+  messageCount++;
+  const idx = botMsgIndex++;
+
+  const row = document.createElement("div");
+  row.className = "message-row bot";
+
+  const avatar = document.createElement("div");
+  avatar.className = "msg-avatar bot";
+  avatar.textContent = "⚖️";
+
+  const content = document.createElement("div");
+  content.className = "msg-content";
+
+  // Main bubble
+  const bubble = document.createElement("div");
+  bubble.className = "bubble bot";
+  bubble.innerHTML = formatBotText(text);
+
+  // AI disclaimer + confidence badge
+  const metaRow = document.createElement("div");
+  metaRow.className = "bot-meta-row";
+
+  const disclaimer = document.createElement("span");
+  disclaimer.className = "ai-disclaimer";
+  disclaimer.textContent = "🤖 AI-generated response";
+
+  const confBadge = document.createElement("span");
+  const conf = meta.confidence || "Medium";
+  confBadge.className = `conf-badge conf-${conf.toLowerCase().split(" ")[0].replace(/[^a-z]/g, "")}`;
+  confBadge.textContent = `Confidence: ${conf}`;
+  if (meta.ragUsed) confBadge.textContent += " · ✅ Verified Source";
+
+  metaRow.appendChild(disclaimer);
+  metaRow.appendChild(confBadge);
+
+  // Feedback buttons
+  const feedbackRow = document.createElement("div");
+  feedbackRow.className = "feedback-row";
+  feedbackRow.innerHTML = `
+    <span class="feedback-label">Was this helpful?</span>
+    <button class="feedback-btn" id="fb-yes-${idx}" onclick="submitFeedback(${idx}, true, this)">👍 Yes</button>
+    <button class="feedback-btn" id="fb-no-${idx}" onclick="submitFeedback(${idx}, false, this)">👎 No</button>
+  `;
+
+  const time = document.createElement("div");
+  time.className = "msg-time";
+  time.textContent = getCurrentTime() + (meta.provider ? ` · ${meta.provider}` : "");
+
+  content.appendChild(bubble);
+  content.appendChild(metaRow);
+  content.appendChild(feedbackRow);
+  content.appendChild(time);
 
   row.appendChild(avatar);
   row.appendChild(content);
-
   chatMessages.appendChild(row);
-
-  // Smooth scroll to bottom
   chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: "smooth" });
 }
 
@@ -482,6 +539,29 @@ function showToast(message) {
   toast.classList.add("show");
   clearTimeout(toastTimeout);
   toastTimeout = setTimeout(() => toast.classList.remove("show"), 3500);
+}
+
+// Submit feedback (helpful / not helpful)
+async function submitFeedback(msgIndex, helpful, btn) {
+  try {
+    // Disable both buttons to prevent double-submit
+    const yesBtn = document.getElementById(`fb-yes-${msgIndex}`);
+    const noBtn  = document.getElementById(`fb-no-${msgIndex}`);
+    if (yesBtn) { yesBtn.disabled = true; yesBtn.style.opacity = "0.5"; }
+    if (noBtn)  { noBtn.disabled  = true; noBtn.style.opacity  = "0.5"; }
+
+    btn.style.opacity = "1";
+    btn.style.fontWeight = "bold";
+
+    await fetch(CONFIG.FEEDBACK_URL, {
+      method : "POST",
+      headers: { "Content-Type": "application/json" },
+      body   : JSON.stringify({ sessionId: CONFIG.SESSION_ID, messageIndex: msgIndex, helpful }),
+    });
+    showToast(helpful ? "👍 Thanks for the feedback!" : "👎 Thanks! We'll keep improving.");
+  } catch (_) {
+    showToast("Feedback noted locally.");
+  }
 }
 
 // ============================================================
